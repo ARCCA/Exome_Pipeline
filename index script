@@ -1,0 +1,42 @@
+#!/bin/bash --login
+#SBATCH -J AmyHouseman_BWAindex
+#SBATCH -o %x.stdout.%J.%N
+#SBATCH -e %x.stderr.%J.%N
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH -p c_compute_wgp
+#SBATCH --account=scw1581
+#SBATCH --mail-type=ALL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=HousemanA@cardiff.ac.uk     # Where to send mail	
+
+#make directories for where the bwa index input and output will be stored.
+GLUSTER=/gluster/wgp/users/c21087028/BWAindex/
+mkdir -p $GLUSTER
+
+#Upload the reference human genome file from https://www.ncbi.nlm.nih.gov/genome/guide/human/
+#From my own computer terminal (where the file is currently):
+#scp ~/media/amyhouseman/9C107AA7107A87D2/Cardiff/Pipeline_code/humanrefseq/GRCh38/GRCh38_latest_genomic.fna.gz c.c21087028@hawklogin.cf.ac.uk:/gluster/wgp/users/c21087028/bwaindex/GRCh38_latest_genomic.fna.gz
+
+#Make directories in scratch for where the human reference genome data will be whilst the job is running, and where the output will be deposited. 
+SCRATCH=/scratch/c.c21087028/Polyposis/BWAindex/
+mkdir -p $SCRATCH
+
+#This is the variable to the human reference sequence data before it has been moved onto scratch.
+GLUSTERREFSEQ=/gluster/wgp/users/c21087028/BWAindex/GRCh38_latest_genomic.fna.gz
+
+#Move the human reference sequence from gluster to scratch 
+mv $GLUSTERREFSEQ $SCRATCH
+
+cd $SCRATCH
+SCRATCHREFSEQ=/scratch/c.c21087028/Polyposis/BWAindex/GRCh38_latest_genomic.fna.gz
+ 
+#Load the singularity container for bwa
+wget https://wotan.cardiff.ac.uk/containers/bwa-0.7.17.sif
+module load singularity
+singularity run 
+bwa-0.7.17.sif index $SCRATCHREFSEQ 
+
+#Move the BWAindex directory back to gluster
+mv $SCRATCH $GLUSTER
+
+

@@ -1,0 +1,74 @@
+###Normal script to run fastp on bash###
+
+##This code is used to assess and trim gzipped fastq files, it removes the adapter sequences which are stored in Adaptersequences/Inputadapter.fa
+
+#The acc_list.txt is a text file which contains the identifiers for each sequence. It looks like this: 
+NG0921001_EKDN210018941-1A_HN2MGDSX2_L2_
+NG0921002_EKDN210018942-1A_HN2MGDSX2_L3_
+NG0921003_EKDN210018943-1A_HN2MGDSX2_L3_
+NG0921004_EKDN210018944-1A_HMYL3DSX2_L4_
+NG0921005_EKDN210018945-1A_HN2MGDSX2_L2_
+NG0921006_EKDN210018946-1A_HN2MGDSX2_L2_
+NG0921007_EKDN210018947-1A_HN2MGDSX2_L3_
+NG0921008_EKDN210018948-1A_HN2MGDSX2_L3_
+NG0921009_EKDN210018949-1A_HN2MGDSX2_L3_
+NG0921010_EKDN210018950-1A_HN2MGDSX2_L2_
+NG0921011_EKDN210018951-1A_HN2MGDSX2_L3_
+NG0921012_EKDN210018952-1A_HN2MGDSX2_L3_
+NG0921013_EKDN210018953-1A_HN2MGDSX2_L2_
+NG0921014_EKDN210018954-1A_HN2MGDSX2_L3_
+NG0921015_EKDN210018955-1A_HN2MGDSX2_L3_
+NG0921016_EKDN210018956-1A_HN2MGDSX2_L2_
+NG0921017_EKDN210018957-1A_HN2MGDSX2_L2_
+NG0921018_EKDN210018958-1A_HN2MGDSX2_L2_
+NG0921019_EKDN210018959-1A_HN2MGDSX2_L2_
+NG0921020_EKDN210018960-1A_HN2MGDSX2_L2_
+NG0921021_EKDN210018961-1A_HN2MGDSX2_L2_
+NG0921022_EKDN210018962-1A_HMYL3DSX2_L4_
+NG0921024_EKDN210018964-1A_HMYL3DSX2_L4_
+NG0921025_EKDN210018965-1A_HN2MGDSX2_L3_
+NG0921026_EKDN210018966-1A_HN2MGDSX2_L2_
+NG0921027_EKDN210018967-1A_HN2MGDSX2_L3_
+NG0921028_EKDN210018968-1A_HN2MGDSX2_L3_
+NG0921029_EKDN210018969-1A_HN2MGDSX2_L3_
+NG0921030_EKDN210018970-1A_HN2MGDSX2_L2_
+NG0921031_EKDN210018971-1A_HN2MGDSX2_L3_
+NG0921032_EKDN210018972-1A_HN2MGDSX2_L3_
+NG0921033_EKDN210018973-1A_HN2MGDSX2_L3_
+NG0921035_EKDN210018974-1A_HMYL3DSX2_L4_
+
+## The Inputadapter.fa looks like this:
+>Illumina forward adapter - read 1
+AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT
+
+>Illumina reverse adapter - read 2 
+GATCGGAAGAGCACACGTCTGAACTCCAGTCACGGATGACTATCTCGTATGCCGTCTTCTGCTTG
+
+######Command::: ##############
+#Install fastp 
+sudo apt install fastp
+
+cd '/media/amyhouseman/9C107AA7107A87D2/Cardiff/PhD_Project/Projects/PolyposisExomeAnalysis_Project/4_Practice_Environment_fastp'
+
+#Current file system practice#
+cat All_fastp_input/List_of_exome_IDs | parallel -j 1 "echo fastp -i RawPEreads/{}1.fq.gz -I RawPEreads/{}2.fq.gz -o All_fastp_output/TrimmedPEreads/{}1.trimmed.fq.gz -O All_fastp_output/TrimmedPEreads/{}2.trimmed.fq.gz --html All_fastp_output/html_output/{}pairhtml --json All_fastp_output/json_output/{}pairjson --failed_out failed_output/failedoutput/{} --unpaired1 All_fastp_output/Unpairedreads/Unpaired_read1/{}1.unpaired1.fq.gz --unpaired2 All_fastp_output/unpairedreads_output/Unpaired_read2/{}2.unpaired2.fq.gz -m --merged_out All_fastp_output/mergedreads_output/{}merged.fq.gz --adapter_fasta All_fastp_input/Inputadapter.fa"
+
+#Real run with current file system organisation#
+cat All_fastp_input/List_of_exome_IDs | parallel -j 1 "fastp -i All_fastp_input/RawPEreads/{}1.fq.gz -I All_fastp_input/RawPEreads/{}2.fq.gz -o All_fastp_output/TrimmedPEreads/{}1.trimmed.fq.gz -O All_fastp_output/TrimmedPEreads/{}2.trimmed.fq.gz --html All_fastp_output/html_output/{}pairhtml --json All_fastp_output/json_output/{}pairjson --failed_out failed_output/failedoutput/{} --unpaired1 All_fastp_output/Unpairedreads/Unpaired_read1/{}1.unpaired1.fq.gz --unpaired2 All_fastp_output/unpairedreads_output/Unpaired_read2/{}2.unpaired2.fq.gz -m --merged_out All_fastp_output/mergedreads_output/{}merged.fq.gz --adapter_fasta All_fastp_input/Inputadapter.fa"
+
+########################################################################
+#Justification:
+
+#cat acc_list.txt = Print the text file named acc_list.txt which contains the ID names for each paired end read. 
+#| parallel = Use the cat acc_list.txt in the code following. Parallel means that we can run this script over and over, starting at the very first exome ID that was printed, all the way till the last one. 
+#-j 1 = -j means jobs, so how many jobs are we running through parallel, in this example it is 1. If it was more you would have -j 33.
+#"fastp -i = run fastp, and take whatever comes after -i as the pathway to the input file for the forward read of the pair. 
+#RawPEreads/{}1.fq.gz = Go into the folder named RawPEreads and take the first sequence that starts with the first ID of the acc_list.txt file (the parallel nature means that the command will go through each ID individually and pair each up because they have the same ID - that is what this means {}. This 1.fq.gz means, find the ID and then extract the forward read of the pair, this is because each pair has one sequence that ends in 1.fq.gz and one that ends in 2.fq.gz (the reverse read).
+#-I RawPEreads/{}2.fq.gz = -I means the following pathway will lead to read 2 of the pair. All reverse reads end with 2.fq.gz, so this part of the code will find the reverse end. 
+#-o TrimmedPEreads/{}1.trimmed.fq.gz -O TrimmedPEreads/{}2.trimmed.fq.gz = -o is the output for the forward read, and -O is the output for the reverse read after being ran through fastp.
+#--html Output/html_output/{}pairhtml = means the html file will be outputed to this file, the {} means use the same ID in the html file output name. 
+#-json Output/json_output/{}pairjson = means the json file will be outputed to this file, the {} means use the same ID in the json file output name. 
+#--unpaired1 Output/Unpairedreads/Unpaired_read1/{}1.unpaired1.fq.gz --unpaired2 Output/Unpairedreads/Unpaired_read2/{}2.unpaired2.fq.gz = unpaired forward and reverse reads will be put into these filenames. Unpaired reads mean forward and reveres reads that haven't been paired up.
+#-m --merged_out Output/Mergedreads/{}merged.fq.gz = For paired-end (PE) input, fastp supports stiching them by specifying the -m/--merge option. In this merging mode: --merged_out should be given to specify the file to store merged reads, 
+#--adapter_fasta Adaptersequences/Inputadapter.fa = fasta file with the adapter files in.
+#--failed_out Output/failedoutput/{}failed.fq.gz" = can still be given to store the reads (either merged or unmerged) failed to passing filters. 

@@ -1,0 +1,32 @@
+####Create the directories in /scratch/:####
+mkdir fastp
+cd fastp 
+mkdir All_fastp_input
+mkdir All_fastp_output
+cd All_fastp_input
+cd ..
+cd All_fastp_output
+mkdir -p {failed_output,html_output,json_output,mergedreads_output,TrimmedPEreads,unpairedreads_output}
+
+
+#Create directories in /gluster/dcg_cheadle: 
+
+mkdir c.c21087028
+#Set directory privacy just for me
+mkdir -p c.c21087028/Polyposis_Exome_Analysis
+cd dcg_cheadle/c.c21087028/Polyposis_Exome_Analysis 
+mkdir RawPEreads
+
+#Copy the exome paired files from gluster into dcg_cheadle/c_c21087028/Polyposis_Exome_Analysisfastp/All_fastp_input/RawPEreads33
+
+cp gluster/wgp/c.c21087028/*fq.gz dcg_cheadle/c_c21087028/Polyposis_Exome_Analysisfastp/All_fastp_input/RawPEreads
+
+#Then copy the RawPEreads directory into scratch
+cp -R dcg_cheadle/c.c21087028/Polyposis_Exome_Analysisfastp/All_fastp_input/RawPEreads /scratch/c.c21087028/fastp/All_fastp_input
+
+#In scratch there should be these folders and files:
+fastp
+  - /All_fastp_input                                  
+    - RawPEreads/ inputadapter.fa List_of_33_exome_IDs 
+  - /All_fastp_output 
+    - failed_output/ html_output/ json_output/ mergedreads_output/ TrimmedPEreads/ unpairedreads_output/

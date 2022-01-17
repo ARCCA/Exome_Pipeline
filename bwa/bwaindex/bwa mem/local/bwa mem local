@@ -1,0 +1,10 @@
+#Local BWA mem
+
+#bwa mem for the alignment of the forward read to the reference genome.
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "bwa mem HumanRefSeq/GRCh38_latest_genomic.fna  /All_fastp_output/TrimmedPEreads/{}1.trimmed.fq.gz" >> /bwa/bwamem/bwamem{}.1.sam
+
+#bwa mem for the alignment of the reverse read to the reference genome.
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "bwa mem HumanRefSeq/GRCh38_latest_genomic.fna  /All_fastp_output/TrimmedPEreads/{}2.trimmed.fq.gz" >> /bwa/bwamem/bwamem{}.2.sam
+
+#bwa mem for the alignment of the merged forward and reverse read to the reference genome.
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "bwa mem HumanRefSeq/GRCh38_latest_genomic.fna  /All_fastp_output/TrimmedPEreads/{}merged.fq.gz" >> /bwa/bwamem/bwamem{}.merged.sam

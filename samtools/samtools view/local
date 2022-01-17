@@ -1,1 +1,13 @@
+#Samtools view locally
 
+#Install 
+sudo apt install samtools 
+
+# SAM to BAM for forward reads 
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "samtools view -b /bwa/bwamem/bwamem{}.1.sam > {}.1.bam"
+
+# SAM to BAM for reverse reads
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "samtools view -b /bwa/bwamem/bwamem{}.2.sam > {}.2.bam"
+
+# SAM to BAM for merged reads
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "samtools view -b /bwa/bwamem/bwamem{}.merged.sam > {}.merged.bam"

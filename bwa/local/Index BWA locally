@@ -1,3 +1,0 @@
-sudo apt install bwa
-
-bwa index humanrefgenome.fna.gz

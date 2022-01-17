@@ -20,5 +20,6 @@ cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "samtools-1.9.sif  sort
 #BAM to sorted BAM for reverse reads
 cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "samtools-1.9.sif sort /bwa/bwamem/bwamembam/{}.2.bam /samtools/sortedbam/sorted.{}.2.bam"
 
-#BAM to sorted BAM for merged reads
-cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "samtools-1.9.sif sort /bwa/bwamem/bwamembam/{}.merged.bam /samtools/sortedbam/sorted.{}.merged.bam"
+#BAM to sorted BAM for PE reads
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "samtools-1.9.sif sort /bwa/bwamem/bwamembam/{}.PE.bam /samtools/sortedbam/sorted.{}.PE.bam"
+

@@ -1,0 +1,18 @@
+#Samtools view on hawk.
+
+#!/bin/bash --login
+#SBATCH -J AmyHouseman_fastp
+#SBATCH -o %x.stdout.%J.%N
+#SBATCH -e %x.stderr.%J.%N
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH -p c_compute_wgp
+#SBATCH --account=scw1581
+#SBATCH --mail-type=ALL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=HousemanA@cardiff.ac.uk     # Where to send mail
+
+wget https://wotan.cardiff.ac.uk/containers/samtools-1.9.sif 
+module load singularity
+
+# SAM to BAM for PE reads
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run samtools-1.9.sif view -b /bwa/bwamem/{}PE_bwamem.sam > /bwa/bwamem/bwamembam/{}PE_samtoolsview.bam"

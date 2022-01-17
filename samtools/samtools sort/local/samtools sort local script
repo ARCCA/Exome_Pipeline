@@ -1,0 +1,12 @@
+#Samtools sort
+
+#Install
+sudo apt install samtools
+
+#samtools sort for forward reads 
+ 
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "samtools sort /bwa/bwamem/bwamembam/{}.1.bam /samtools/sortedbam/sorted.{}.1.bam"
+
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "samtools sort /bwa/bwamem/bwamembam/{}.2.bam /samtools/sortedbam/sorted.{}.2.bam"
+
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "samtools sort /bwa/bwamem/bwamembam/{}.merged.bam /samtools/sortedbam/sorted.{}.merged.bam"

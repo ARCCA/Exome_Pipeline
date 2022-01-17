@@ -1,0 +1,12 @@
+#samtools index local 
+
+samtools index sorted.bam
+
+#samtools index on forward read
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "samtools index /samtools/sortedbam/{}1_samtoolssorted.bam /samtools/sortedbamindex/{}1_sortedbamindex"
+
+#samtools index on reverse read
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "samtools index /samtools/sortedbam/{}2_samtoolssorted.bam /samtools/sortedbamindex/{}2_sortedbamindex"
+
+#samtools index on PE reads
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "samtools index /samtools/sortedbam/{}PE_samtoolssorted.bam /samtools/sortedbamindex/{}PE_samtoolsbamindex"

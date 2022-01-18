@@ -16,4 +16,4 @@ wget https://wotan.cardiff.ac.uk/containers/bwa-0.7.17.sif
 module load singularity
 
 #Run BWA using the index function and the HumanRefSeq file
-singularity run bwa-0.7.17.sif index HumanRefSeq/GRCh38_latest_genomic.fna >> IndexedHuman_output
+singularity run bwa-0.7.17.sif index HumanRefSeq/GRCh38_latest_genomic.fna > IndexedHuman_output/

@@ -17,13 +17,13 @@ wget https://wotan.cardiff.ac.uk/containers/bwa-0.7.17.sif
 module load singularity
 
 #bwa mem for the alignment of the forward read to the reference genome.
-cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run bwa-0.7.17.sif mem HumanRefSeq/GRCh38_latest_genomic.fna /All_fastp_output/TrimmedPEreads/{}1.trimmed.fq.gz" >> /bwa/bwamem/bwamem{}.1.sam
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run bwa-0.7.17.sif mem Polyposis_Exome_Analysis/fastp/HumanRefSeq/GRCh38_latest_genomic.fna Polyposis_Exome_Analysis/fastp/All_fastp_output/TrimmedPEreads/{}1.trimmed.fq.gz >> Polyposis_Exome_Analysis/bwa/mem/{}1_bwamem.sam"
 
 #bwa mem for the alignment of the reverse read to the reference genome.
-cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run bwa-0.7.17.sif mem HumanRefSeq/GRCh38_latest_genomic.fna /All_fastp_output/TrimmedPEreads/{}2.trimmed.fq.gz" >> /bwa/bwamem/bwamem{}.2.sam
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run bwa-0.7.17.sif mem Polyposis_Exome_Analysis/fastp/HumanRefSeq/GRCh38_latest_genomic.fna Polyposis_Exome_Analysis/fastp/All_fastp_output/TrimmedPEreads/{}2.trimmed.fq.gz >> Polyposis_Exome_Analysis/bwa/mem/{}2_bwamem.sam"
 
 #bwa mem for the alignment of the merged forward and reverse read to the reference genome.
-cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run bwa-0.7.17.sif mem HumanRefSeq/GRCh38_latest_genomic.fna  /All_fastp_output/TrimmedPEreads/{}merged.fq.gz" >> /bwa/bwamem/bwamem{}.merged.sam
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run bwa-0.7.17.sif mem Polyposis_Exome_Analysis/fastp/HumanRefSeq/GRCh38_latest_genomic.fna Polyposis_Exome_Analysis/fastp/All_fastp_output/mergedreads_output/{}merged.fq.gz >> Polyposis_Exome_Analysis/bwa/index/HumanRefSeq/GRCh38_latest_genomic.fna Polyposis_Exome_Analysis/bwa/mem/{}merged_bwamem.sam"
 
 #bwa mem for the alignment of the PE reads to the reference genome.
-cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run bwa-0.7.17.sif mem HumanRefSeq/GRCh38_latest_genomic.fna /All_fastp_output/TrimmedPEreads/{}1.trimmed.fq.gz All_fastp_output/TrimmedPEreads/{}2.trimmed.fq.gz > /bwa/mem/{}PE_bwamem.sam
+cat Polyposis_Exome_Analysis/fastp/All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run bwa-0.7.17.sif mem Polyposis_Exome_Analysis/bwa/index/HumanRefSeq/GRCh38_latest_genomic.fna Polyposis_Exome_Analysis/fastp/All_fastp_output/TrimmedPEreads/{}1.trimmed.fq.gz Polyposis_Exome_Analysis/fastp/All_fastp_output/TrimmedPEreads/{}2.trimmed.fq.gz >> Polyposis_Exome_Analysis/bwa/mem/{}PE_bwamem.sam"

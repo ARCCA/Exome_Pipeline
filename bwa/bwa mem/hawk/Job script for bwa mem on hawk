@@ -25,3 +25,5 @@ cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run bwa-0.
 #bwa mem for the alignment of the merged forward and reverse read to the reference genome.
 cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run bwa-0.7.17.sif mem HumanRefSeq/GRCh38_latest_genomic.fna  /All_fastp_output/TrimmedPEreads/{}merged.fq.gz" >> /bwa/bwamem/bwamem{}.merged.sam
 
+#bwa mem for the alignment of the PE reads to the reference genome.
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run bwa-0.7.17.sif mem HumanRefSeq/GRCh38_latest_genomic.fna /All_fastp_output/TrimmedPEreads/{}1.trimmed.fq.gz All_fastp_output/TrimmedPEreads/{}2.trimmed.fq.gz > /bwa/mem/{}PE_bwamem.sam

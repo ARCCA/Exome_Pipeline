@@ -15,10 +15,10 @@ wget https://wotan.cardiff.ac.uk/containers/samtools-1.9.sif
 module load singularity
 
 #BAM to sorted BAM for forward reads 
-cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run samtools-1.9.sif  sort /bwa/bwamem/bwamembam/{}.1.bam /samtools/sortedbam/sorted.{}.1.bam"
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run samtools-1.9.sif sort Polyposis_Exome_Analysis/samtools/samtoolsview/{}1_samtoolsview.bam Polyposis_Exome_Analysis/samtools/sortedbam/{}1_samtoolssorted.bam"
 
 #BAM to sorted BAM for reverse reads
-cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run samtools-1.9.sif sort /bwa/bwamem/bwamembam/{}.2.bam /samtools/sortedbam/sorted.{}.2.bam"
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run samtools-1.9.sif sort Polyposis_Exome_Analysis/samtools/samtoolsview/{}2_samtoolsview.bam Polyposis_Exome_Analysis/samtools/samtoolssort/{}2_samtoolssorted.bam"
 
 #BAM to sorted BAM for PE reads
-cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run samtools-1.9.sif sort /bwa/bwamem/bwamembam/{}.PE.bam /samtools/sortedbam/sorted.{}.PE.bam"
+cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run samtools-1.9.sif sort Polyposis_Exome_Analysis/samtools/samtoolsview/{}PE_samtoolsview.bam Polyposis_Exome_Analysis/samtools/samtoolssort/{}PE_samtoolssorted.bam"

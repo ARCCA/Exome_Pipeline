@@ -14,5 +14,5 @@
 wget https://wotan.cardiff.ac.uk/containers/bwa-0.7.17.sif
 module load singularity
 
-#bwa mem for the alignment of the forward read to the reference genome.
-cat All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run bwa-0.7.17.sif mem HumanRefSeq/GRCh38_latest_genomic.fna /All_fastp_output/TrimmedPEreads/{}1.trimmed.fq.gz All_fastp_output/TrimmedPEreads/{}2.trimmed.fq.gz >> /bwa/mem/{}PE_bwamem.sam
+#bwa mem for the alignment of the PE reads to the reference genome.
+cat Polyposis_Exome_Analysis/fastp/All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run bwa-0.7.17.sif mem Polyposis_Exome_Analysis/bwa/index/HumanRefSeq/GRCh38_latest_genomic.fna Polyposis_Exome_Analysis/fastp/All_fastp_output/TrimmedPEreads/{}1.trimmed.fq.gz Polyposis_Exome_Analysis/fastp/All_fastp_output/TrimmedPEreads/{}2.trimmed.fq.gz > Polyposis_Exome_Analysis/bwa/mem/{}PE_bwamem.sam

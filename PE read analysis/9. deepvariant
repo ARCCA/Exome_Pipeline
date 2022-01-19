@@ -1,0 +1,21 @@
+##Deep variant - haven't checked if correct yet #####
+
+#!/bin/bash --login
+#SBATCH -J AmyHouseman_fastp
+#SBATCH -o %x.stdout.%J.%N
+#SBATCH -e %x.stderr.%J.%N
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH -p c_compute_wgp
+#SBATCH --account=scw1581
+#SBATCH --mail-type=ALL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=HousemanA@cardiff.ac.uk     # Where to send mail
+
+wget https://wotan.cardiff.ac.uk/containers/deepvariant_1.3.0.sif  
+module load singularity
+
+cat Polyposis_Exome_Analysis/fastp/All_fastp_input/List_of_33_exome_IDs | parallel -j 33 "singularity run deepvariant_1.3.0.sif -B  --model_type=WES -ref=PolyposisExomeAnalysis/bwa/index/HumanRefSeq/GRCh38_latest_genomic.fna
+--reads=PolyposisExomeAnalysis/samtoolssort/{}PE_samtoolssorted.bam
+--output_vcf=PolyposisExomeAnalysis/deepvariant/vcf/{}PE_output.vcf.gz 
+--output_gvcf=PolyposisExomeAnalysis/deepvariant/gvcf/{}PE_output.vcf.gz
+--intermediate_results_dir PolyposisExomeAnalysis/deepvariant/intermediateresults/"

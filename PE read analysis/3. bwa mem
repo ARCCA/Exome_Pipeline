@@ -1,5 +1,3 @@
-## Job script BWA mem with paired end reads 
-
 #!/bin/bash --login
 #SBATCH -J AmyHouseman_fastp
 #SBATCH -o %x.stdout.%J.%N

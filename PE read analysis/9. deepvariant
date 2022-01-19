@@ -14,6 +14,8 @@
 wget https://wotan.cardiff.ac.uk/containers/deepvariant_1.3.0.sif  
 module load singularity
 
+cd /scratch/c.c21087028/
+
 cat Polyposis_Exome_Analysis/fastp/All_fastp_input/List_of_33_exome_IDs | parallel -j 33 "singularity run deepvariant_1.3.0.sif -B  --model_type=WES -ref=PolyposisExomeAnalysis/bwa/index/HumanRefSeq/GRCh38_latest_genomic.fna
 --reads=PolyposisExomeAnalysis/samtoolssort/{}PE_samtoolssorted.bam
 --output_vcf=PolyposisExomeAnalysis/deepvariant/vcf/{}PE_output.vcf.gz 

@@ -9,7 +9,7 @@
 #SBATCH --mail-type=ALL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=HousemanA@cardiff.ac.uk     # Where to send mail
 
-cd /scratch/c.c20182028/bwa
+cd /scratch/c.c20182028/
 
 #Load the singularity container for BWA
 wget https://wotan.cardiff.ac.uk/containers/bwa-0.7.17.sif

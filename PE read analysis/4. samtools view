@@ -1,5 +1,3 @@
-#Samtools view on hawk.
-
 #!/bin/bash --login
 #SBATCH -J AmyHouseman_fastp
 #SBATCH -o %x.stdout.%J.%N
@@ -15,4 +13,4 @@ wget https://wotan.cardiff.ac.uk/containers/samtools-1.9.sif
 module load singularity
 
 # SAM to BAM for PE reads
-cat Polyposis_Exome_Analysis/fastp/All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run samtools-1.9.sif view -b Polyposis_Exome_Analysis/bwa/mem/{}PE_bwamem.sam > Polyposis_Exome_Analysis/samtools/view/{}PE_samtoolsview.bam"
+cat Polyposis_Exome_Analysis/fastp/All_fastp_input/List_of_33_exome_IDs | parallel -j 33 "singularity run samtools-1.9.sif view -b Polyposis_Exome_Analysis/bwa/mem/{}PE_bwamem.sam > Polyposis_Exome_Analysis/samtools/view/{}PE_samtoolsview.bam"

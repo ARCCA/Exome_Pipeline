@@ -12,5 +12,7 @@
 wget https://wotan.cardiff.ac.uk/containers/samtools-1.9.sif 
 module load singularity
 
+cd /scratch/c.c21087028/
+
 #samtools index on PE reads
 cat Polyposis_Exome_Analysis/fastp/All_fastp_input/List_of_33_exome_IDs | parallel -j 33 "singularity run samtools-1.9.sif index Polyposis_Exome_Analysis/samtools/sort/{}PE_samtoolssorted.bam Polyposis_Exome_Analysis/samtools/index/{}PE_samtoolssortedbamindex"

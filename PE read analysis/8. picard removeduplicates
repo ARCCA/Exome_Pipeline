@@ -14,4 +14,6 @@
 wget https://wotan.cardiff.ac.uk/containers/picard-2.25.6.sif  
 module load singularity
 
+cd /scratch/c.c21087028/
+
 cat Polyposis_Exome_Analysis/fastp/All_fastp_input/List_of_33_exome_IDs | parallel -j 33 "singularity run picard-2.25.6.sif MarkDuplicates I=Polyposis_Exome_Analysis/samtools/sort/{}PE_samtoolssorted.bam O=Polyposis_Exome_Analysis/picard/markduplicate/removedduplicates/{}PE_removedduplicates.bam M=Polyposis_Exome_Analysis/picard/markduplicate/removedduplicates/metrics/{}PE_removedduplicatesmetrics.txt REMOVE_DUPLICATES=true"

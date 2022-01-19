@@ -1,0 +1,19 @@
+#Job script for picard markduplicates
+
+#!/bin/bash --login
+#SBATCH -J AmyHouseman_fastp
+#SBATCH -o %x.stdout.%J.%N
+#SBATCH -e %x.stderr.%J.%N
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH -p c_compute_wgp
+#SBATCH --account=scw1581
+#SBATCH --mail-type=ALL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=HousemanA@cardiff.ac.uk     # Where to send mail
+
+wget https://wotan.cardiff.ac.uk/containers/picard-2.25.6.sif  
+module load singularity
+
+##mark duplicates 
+
+cat Polyposis_Exome_Analysis/fastp/All_fastp_input/List_of_33_exome_IDs | parallel -j 33 "singularity run picard-2.25.6.sif MarkDuplicates I=Polyposis_Exome_Analysis/samtools/sort/{}PE_samtoolssorted.bam O=Polyposis_Exome_Analysis/picard/markduplicate/markduplicates/{}PE_markedduplicates.bam M=Polyposis_Exome_Analysis/picard/markduplicate/markduplicates/metrics/{}PE_markedduplicatesmetrics.txt"

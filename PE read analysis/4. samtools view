@@ -8,11 +8,31 @@
 #SBATCH --account=scw1581
 #SBATCH --mail-type=ALL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=HousemanA@cardiff.ac.uk     # Where to send mail
+#SBATCH --array=1-33
+#SBATCH --time=02:00:00
 
-wget https://wotan.cardiff.ac.uk/containers/samtools-1.9.sif 
-module load singularity
+module purge
+module load singularity parallel
 
-cd /scratch/c.c21087028/
+# Set bash error trapping to exit on first error.
+set -eu
+
+WDPATH=/scratch/$USER/$SLURM_ARRAY_JOB_ID
+CONTAINER_FILE=samtools-1.9.sif
+MY_CONTAINER_PATH=/scratch/$USER/containers
+CONTAINER=$MY_CONTAINER_PATH/$CONTAINER_FILE
+
+if [ "$SLURM_ARRAY_TASK_ID" == "1" ]
+then
+  mkdir -p $MY_CONTAINER_PATH
+  [ -f "$CONTAINER" ] || ssh cl1 wget -O $CONTAINER https://wotan.cardiff.ac.uk/containers/$CONTAINER_FILE
+  mkdir $WDPATH
+fi
+
+while [ ! -d $WDPATH ]
+do
+  sleep 10
+done
 
 # SAM to BAM for PE reads
-cat Polyposis_Exome_Analysis/fastp/All_fastp_input/List_of_33_exome_IDs | parallel -j 33 "singularity run samtools-1.9.sif view -b Polyposis_Exome_Analysis/bwa/mem/{}PE_bwamem.sam > Polyposis_Exome_Analysis/samtools/view/{}PE_samtoolsview.bam"
+sed -n "${SLURM_ARRAY_TASK_ID}p" Polyposis_Exome_Analysis/fastp/All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run $CONTAINER view -b Polyposis_Exome_Analysis/bwa/mem/{}PE_bwamem.sam > Polyposis_Exome_Analysis/samtools/view/{}PE_samtoolsview.bam"

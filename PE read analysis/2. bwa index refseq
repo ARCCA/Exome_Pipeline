@@ -9,11 +9,18 @@
 #SBATCH --mail-type=ALL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=HousemanA@cardiff.ac.uk     # Where to send mail
 
+module purge
+
+CONTAINER_FILE=bwa-0.7.17.sif
+MY_CONTAINER_PATH=/scratch/$USER/containers
+CONTAINER=$MY_CONTAINER_PATH/$CONTAINER_FILE
+
+mkdir -p $MY_CONTAINER_PATH
+[ -f "$CONTAINER" ] || ssh cl1 wget -O $CONTAINER https://wotan.cardiff.ac.uk/containers/$CONTAINER_FILE
+
 cd /scratch/c.c20182028/
 
-#Load the singularity container for BWA
-wget https://wotan.cardiff.ac.uk/containers/bwa-0.7.17.sif
-module load singularity
+module load singularity parallel
 
 #Run BWA using the index function and the HumanRefSeq file
-singularity run bwa-0.7.17.sif index Polyposis_Exome_Analysis/bwa/index/HumanRefSeq/GRCh38_latest_genomic.fna > Polyposis_Exome_Analysis/bwa/index/IndexedHuman_output/
+singularity run $CONTAINER index Polyposis_Exome_Analysis/bwa/index/HumanRefSeq/GRCh38_latest_genomic.fna > Polyposis_Exome_Analysis/bwa/index/IndexedHuman_output/

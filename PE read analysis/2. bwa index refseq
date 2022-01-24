@@ -11,6 +11,10 @@
 #SBATCH --time=02:00:00
 
 module purge
+module load singularity parallel
+
+# Make bash exit on first error.
+set -eu
 
 CONTAINER_FILE=bwa-0.7.17.sif
 MY_CONTAINER_PATH=/scratch/$USER/containers
@@ -20,8 +24,6 @@ mkdir -p $MY_CONTAINER_PATH
 [ -f "$CONTAINER" ] || ssh cl1 wget -O $CONTAINER https://wotan.cardiff.ac.uk/containers/$CONTAINER_FILE
 
 cd /scratch/c.c20182028/
-
-module load singularity parallel
 
 #Run BWA using the index function and the HumanRefSeq file
 singularity run $CONTAINER index Polyposis_Exome_Analysis/bwa/index/HumanRefSeq/GRCh38_latest_genomic.fna > Polyposis_Exome_Analysis/bwa/index/IndexedHuman_output/

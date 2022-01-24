@@ -8,10 +8,27 @@
 #SBATCH --account=scw1581
 #SBATCH --mail-type=ALL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=HousemanA@cardiff.ac.uk     # Where to send mail
+#SBATCH --array=1-33
 
-wget https://wotan.cardiff.ac.uk/containers/fastp-v0.23.1.sif 
+WDPATH=/scratch/$USER/$SLURM_ARRAY_JOB_ID
+
+if [ "$SLURM_ARRAY_TASK_ID" == "1" ]
+then
+  CONTAINER_FILE=fastp-v0.23.1.sif
+  MY_CONTAINER_PATH=/scratch/$USER/containers
+  CONTAINER=$MY_CONTAINER_PATH/$CONTAINER_FILE
+  mkdir -p $MY_CONTAINER_PATH
+  wget -O $CONTAINER https://wotan.cardiff.ac.uk/containers/$CONTAINER_FILE
+  mkdir $WDPATH
+fi
+
+while [ ! -d $WDPATH ]
+do
+  sleep 10
+done
+
 module load singularity
 
 cd /scratch/c.c21087028/
 
-cat Polyposis_Exome_Analysis/fastp/All_fastp_input/List_of_33_exome_IDs | parallel -j 33 "singularity run fastp-v0.23.1.sif -i Polyposis_Exome_Analysis/fastp/All_fastp_input/RawPEreads/{}1.fq.gz -I Polyposis_Exome_Analysis/fastp/All_fastp_input/RawPEreads/{}2.fq.gz -o Polyposis_Exome_Analysis/fastp/All_fastp_output/TrimmedPEreads/{}1.trimmed.fq.gz -O Polyposis_Exome_Analysis/fastp/All_fastp_output/TrimmedPEreads_33/{}2.trimmed.fq.gz --html Polyposis_Exome_Analysis/fastp/All_fastp_output/html_output/{}pairhtml --json Polyposis_Exome_Analysis/fastp/All_fastp_output/json_output/{}pairjson --failed_out Polyposis_Exome_Analysis/fastp/All_fastp_output/failed_output/{}failed --unpaired1 Polyposis_Exome_Analysis/fastp/All_fastp_output/Unpairedreads/Unpaired_read1/{}1.unpaired1.fq.gz --unpaired2 Polyposis_Exome_Analysis/fastp/All_fastp_output/unpairedreads_output/Unpaired_read2/{}2.unpaired2.fq.gz -m --merged_out Polyposis_Exome_Analysis/fastp/All_fastp_output/mergedreads_output/{}merged.fq.gz --adapter_fasta Polyposis_Exome_Analysis/fastp/All_fastp_input/Inputadapter.fa"
+sed -n "${SLURM_ARRAY_TASK_ID}p" Polyposis_Exome_Analysis/fastp/All_fastp_input/List_of_33_exome_IDs | parallel -j 1 "singularity run $CONTAINER -i Polyposis_Exome_Analysis/fastp/All_fastp_input/RawPEreads/{}1.fq.gz -I Polyposis_Exome_Analysis/fastp/All_fastp_input/RawPEreads/{}2.fq.gz -o Polyposis_Exome_Analysis/fastp/All_fastp_output/TrimmedPEreads/{}1.trimmed.fq.gz -O Polyposis_Exome_Analysis/fastp/All_fastp_output/TrimmedPEreads_33/{}2.trimmed.fq.gz --html Polyposis_Exome_Analysis/fastp/All_fastp_output/html_output/{}pairhtml --json Polyposis_Exome_Analysis/fastp/All_fastp_output/json_output/{}pairjson --failed_out Polyposis_Exome_Analysis/fastp/All_fastp_output/failed_output/{}failed --unpaired1 Polyposis_Exome_Analysis/fastp/All_fastp_output/Unpairedreads/Unpaired_read1/{}1.unpaired1.fq.gz --unpaired2 Polyposis_Exome_Analysis/fastp/All_fastp_output/unpairedreads_output/Unpaired_read2/{}2.unpaired2.fq.gz -m --merged_out Polyposis_Exome_Analysis/fastp/All_fastp_output/mergedreads_output/{}merged.fq.gz --adapter_fasta Polyposis_Exome_Analysis/fastp/All_fastp_input/Inputadapter.fa"

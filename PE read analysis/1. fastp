@@ -12,14 +12,14 @@
 #SBATCH --time=02:00:00
 
 WDPATH=/scratch/$USER/$SLURM_ARRAY_JOB_ID
+CONTAINER_FILE=fastp-v0.23.1.sif
+MY_CONTAINER_PATH=/scratch/$USER/containers
+CONTAINER=$MY_CONTAINER_PATH/$CONTAINER_FILE
 
 if [ "$SLURM_ARRAY_TASK_ID" == "1" ]
 then
-  CONTAINER_FILE=fastp-v0.23.1.sif
-  MY_CONTAINER_PATH=/scratch/$USER/containers
-  CONTAINER=$MY_CONTAINER_PATH/$CONTAINER_FILE
   mkdir -p $MY_CONTAINER_PATH
-  wget -O $CONTAINER https://wotan.cardiff.ac.uk/containers/$CONTAINER_FILE
+  [ -f "$CONTAINER" ] || ssh cl1 wget -O $CONTAINER https://wotan.cardiff.ac.uk/containers/$CONTAINER_FILE
   mkdir $WDPATH
 fi
 
@@ -28,7 +28,7 @@ do
   sleep 10
 done
 
-module load singularity
+module load singularity parallel
 
 cd /scratch/c.c21087028/
 

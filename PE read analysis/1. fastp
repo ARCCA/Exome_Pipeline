@@ -9,6 +9,7 @@
 #SBATCH --mail-type=ALL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=HousemanA@cardiff.ac.uk     # Where to send mail
 #SBATCH --array=1-33
+#SBATCH --time=02:00:00
 
 WDPATH=/scratch/$USER/$SLURM_ARRAY_JOB_ID
 

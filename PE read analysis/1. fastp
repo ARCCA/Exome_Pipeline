@@ -12,6 +12,10 @@
 #SBATCH --time=02:00:00
 
 module purge
+module load singularity parallel
+
+# Set bash error trapping to exit on first error.
+set -eu
 
 WDPATH=/scratch/$USER/$SLURM_ARRAY_JOB_ID
 CONTAINER_FILE=fastp-v0.23.1.sif
@@ -30,7 +34,7 @@ do
   sleep 10
 done
 
-module load singularity parallel
+
 
 cd /scratch/c.c21087028/
 
